@@ -22,9 +22,7 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  *
- * $Id: XMLUtils.java,v 1.15 2009/10/19 18:19:20 asyhuang Exp $
- *
- * Portions Copyrighted 2011-2015 ForgeRock AS.
+ * Portions Copyrighted 2011-2016 ForgeRock AS.
  */
 package org.forgerock.util.xml;
 
@@ -46,6 +44,7 @@ public final class XMLUtils {
 
     private static final Logger LOGGER = Logger.getLogger(XMLUtils.class.getName());
     private static final Object SECURITY_MANAGER;
+    private static final Integer ENTITY_EXP_LIMIT = Integer.getInteger("org.forgerock.util.xml.entity.expansion.limit", 5000);
 
     /**
      * When Xerces is used for XML parsing, the only way to control entityExpansionLimit is to override the default
@@ -56,15 +55,16 @@ public final class XMLUtils {
      * JAXP configuration guide</a>.
      */
     static {
-        Object securityManager;
+        Object securityManager = null;
         try {
             Class<?> securityManagerClass = Class.forName("org.apache.xerces.util.SecurityManager");
             securityManager = securityManagerClass.newInstance();
-            Integer limit = Integer.getInteger("org.forgerock.util.xml.entity.expansion.limit", 5000);
             Method setEntityExpansionLimit = securityManagerClass.getMethod("setEntityExpansionLimit", int.class);
-            setEntityExpansionLimit.invoke(securityManager, limit);
+            setEntityExpansionLimit.invoke(securityManager, ENTITY_EXP_LIMIT);
+        } catch (ClassNotFoundException ex) {
+            LOGGER.finest("Not using Xerces");
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, "Unable to set expansion limit for Xerces, using default settings", ex);
+            LOGGER.log(Level.FINEST, "Unable to set expansion limit for Xerces, using default settings", ex);
             securityManager = null;
         }
         SECURITY_MANAGER = securityManager;
@@ -95,6 +95,9 @@ public final class XMLUtils {
         if (SECURITY_MANAGER != null) {
             dbf.setAttribute("http://apache.org/xml/properties/security-manager", SECURITY_MANAGER);
         }
+        try {
+           dbf.setAttribute("http://www.oracle.com/xml/jaxp/properties/entityExpansionLimit", ENTITY_EXP_LIMIT);
+        } catch (IllegalArgumentException ie) {}
         DocumentBuilder db = dbf.newDocumentBuilder();
         db.setEntityResolver(new XMLHandler());
         return db;
@@ -123,6 +126,9 @@ public final class XMLUtils {
         if (SECURITY_MANAGER != null) {
             sp.setProperty("http://apache.org/xml/properties/security-manager", SECURITY_MANAGER);
         }
+        try {
+           sp.setProperty("http://www.oracle.com/xml/jaxp/properties/entityExpansionLimit", ENTITY_EXP_LIMIT);
+        } catch (Exception ex) {}
         sp.getXMLReader().setEntityResolver(new XMLHandler());
         return sp;
     }
