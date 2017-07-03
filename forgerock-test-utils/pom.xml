@@ -23,7 +23,7 @@
     </parent>
 
     <artifactId>forgerock-test-utils</artifactId>
-    <name>ForgeRock Utils test utilities</name>
+    <name>Wren Security Utils test utilities</name>
 
     <dependencies>
         <dependency>
