@@ -21,17 +21,10 @@
         <version>3.0.1</version>
     </parent>
     <artifactId>forgerock-util</artifactId>
-    <name>ForgeRock Utility Classes</name>
-    <description>Miscellaneous utility classes used within ForgeRock projects.</description>
+    <name>Wren Security Utility Classes</name>
+    <description>Miscellaneous utility classes used within Wren Security forks of ForgeRock projects.</description>
     <packaging>bundle</packaging>
-    <url>http://commons.forgerock.org/forgerock-util</url>
-    <distributionManagement>
-        <site>
-            <id>community.internal.forgerock.com</id>
-            <name>ForgeRock Community</name>
-            <url>scp://community.internal.forgerock.com/var/www/vhosts/commons.forgerock.org/httpdocs/forgerock-util</url>
-        </site>
-    </distributionManagement>
+    <url>https://github.com/WrenSecurity/wrensec-util</url>
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
