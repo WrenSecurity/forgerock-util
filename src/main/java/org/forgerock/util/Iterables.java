@@ -133,7 +133,7 @@ public class Iterables {
      *
      * @param <T> the element type
      * @param iterable the {@linkplain Iterable} to filter
-     * @param predicate the {@linkplan Predicate} used to include elements in the filtered result
+     * @param predicate the {@linkplain Predicate} used to include elements in the filtered result
      * @return the filtered {@linkplain Iterable}
      */
     public static <T> Iterable<T> filter(Iterable<T> iterable, Predicate<T> predicate) {
